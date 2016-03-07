@@ -49,12 +49,12 @@ var sd, splaing, root, scale, partials, tonic, times, beatLength, phraseLength, 
 
 /// section 1
 root = 100.0;
-beatLength = 5.0;
+beatLength = 30.0;
 sectionLength = 500.0;
-partials = [[1.0, 1.0],  [1.25, 0.75], [1.5, 0.5]];
+partials = [[1.0, 1.0], [0.5, 0.25], [0.75, 0.25],  [1.25, 0.75], [1.5, 0.5], [2.5, 0.25]];
 scale = [1/1,5/4,3/2,7/4,11/8,13/8,17/16,19/16];
-prob = 0.5;
-
+prob = 0.25;
+///
 /// section 2
 //
 //root = 800.0;
@@ -75,16 +75,16 @@ sd = CtkSynthDef(\myNote, {arg freq, dur, amp, pan;
 	var sin, env, envGen;
 	env = Env([0.001, 0.99, 0.001], [0.75, 0.25], [\sin, \sin]);
 	envGen = EnvGen.kr(env, doneAction: 0, timeScale: dur);
-	sin = SinOsc.ar(freq, 2, amp);
+	sin = SinOsc.ar(freq, SinOsc.ar(20,0), amp);
 	Out.ar(0, Pan2.ar(sin * envGen, pan));
 }).send(s);
 
 
-splaing = CtkSynthDef(\myNote, {arg freq, mod, dur, amp, pan;
+splaing = CtkSynthDef(\myNote, {arg freq, moda, modb, dur, amp, pan;
 	var pm, env, envGen;
 	env = Env([0.001, 0.99, 0.001], [0.75, 0.25], [\sin, \sin]);
 	envGen = EnvGen.kr(env, doneAction: 0, timeScale: dur);
-	pm = SinOsc.ar(freq, SinOsc.ar(XLine.kr(20, 100, 9), 0, 2pi), 0.25);
+	pm = SinOsc.ar(freq, SinOsc.ar(XLine.kr(moda, modb, dur), 0, 2pi), amp);
 
 	Out.ar(0, Pan2.ar(pm * envGen, pan));
 }).send(s);
@@ -95,15 +95,30 @@ sectionLength.do({arg o;
 	routine = Routine.new({(o*beatLength).wait;
 		scale.do({arg thisNote, i;
 
-			// Todo:  insert sampling of Ard values
 
+						// Todo:  insert sampling of Ard values
 			if (prob.coin, {
 				partials.do({arg thisPart, u;
 					var aNote, randPan, randAmp, noteLength;
 					randPan = rrand(-1.0, 1.0);
 					randAmp = rrand(0.01, 0.25);
 					noteLength = rrand(beatLength/2.0, beatLength*2.0);
-					aNote = splaing.note(0.0, noteLength).freq_(root*thisNote*thisPart[0]).dur_(thisPart[1]*noteLength).amp_(randAmp).pan_(randPan);
+
+					aNote = sd.note(0.0, noteLength).freq_(root*thisNote*thisPart[0]).dur_(thisPart[1]*noteLength).amp_(randAmp).pan_(randPan);
+					aNote.play;
+				});
+			});
+
+			// Todo:  insert sampling of Ard values
+			if (prob.coin, {
+				partials.do({arg thisPart, u;
+					var aNote, randPan, randAmp, randmoda, randmodb, noteLength;
+					randPan = rrand(-1.0, 1.0);
+					randAmp = rrand(0.01, 0.25);
+					noteLength = rrand(beatLength/2.0, beatLength*2.0);
+					randmoda = rrand(10, 500);
+					randmodb = rrand(10, 600);
+					aNote = splaing.note(0.0, noteLength).freq_(root*thisNote*thisPart[0]).moda_(randmoda).modb_(randmodb).dur_(thisPart[1]*noteLength).amp_(randAmp).pan_(randPan);
 					aNote.play;
 				});
 			});
