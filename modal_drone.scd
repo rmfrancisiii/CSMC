@@ -1,3 +1,4 @@
+(
 // sample modal drone
 // james watkins
 // 29.12.2015
@@ -24,15 +25,11 @@ add arduino code
 
 */
 
-(
 s = Server.default;
 ServerOptions.devices;
 s.options.device_("JackRouter");
 s.boot;
- )
 
-
-(
 var sd, splaing, root, scale, partials, tonic, times, beatLength, phraseLength,  sectionLength, prob, routine;
 
 

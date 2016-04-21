@@ -157,7 +157,7 @@ SinOsc.new // as do methods!
 // to send code to the interpreter (not Return! On some
 // keyboard, you need to do Control-Return to get 'enter')
 
-"I am a statement".postln;
+"I am a statement".isMemberOf(String);
 
 (
 // parens delimit a code block. You can double click
@@ -220,7 +220,7 @@ mulAddResult = mulAdd.value(3, 4, 5);
 )
 
 // SuperCollider can also interact with the operating system:
-"ls".unixCmd;
+"ls /git/CSMC".unixCmd;
 "cp README READMECOPY".unixCmd;
 "ls".unixCmd;
 "rm READMECOPY".unixCmd;
@@ -263,7 +263,7 @@ s.sendMsg(\n_free, 1000);
 // OSC messages are a bit icky. There are other classes you will see
 // that handle them for you
 
-b = Synth(\mySynthDef, [\freq, 440]);
+b = Synth(\mySynthDef, [\freq, 880]);
 b.free;
 
 // Function has a 'play' method that does a number of the above steps for you!
